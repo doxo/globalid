@@ -16,7 +16,10 @@ Gem::Specification.new do |s|
   s.files        = Dir['MIT-LICENSE', 'README.md', 'lib/**/*']
   s.require_path = 'lib'
 
-  s.add_runtime_dependency 'activesupport', '>= 3.2.0'
+  s.add_runtime_dependency 'activesupport', '= 3.2.22'
 
   s.add_development_dependency 'rake'
+  s.add_development_dependency 'minitest'
+  s.add_development_dependency 'test-unit'
+  s.add_development_dependency 'tzinfo'
 end
