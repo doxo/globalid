@@ -12,7 +12,6 @@ class GlobalID
   # Set up the signed GlobalID verifier and include Active Record support.
   class Railtie < Rails::Railtie # :nodoc:
     config.global_id = ActiveSupport::OrderedOptions.new
-    # config.eager_load_paths << GlobalID
     Dir.glob("lib/global_id/**/*.rb").each { |file| require "./#{file}" }
 
     initializer 'global_id' do |app|

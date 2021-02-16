@@ -35,26 +35,13 @@ class RailtieTest < ActiveSupport::TestCase
     assert_nil SignedGlobalID.expires_in
   end
 
-  test 'config.global_id can be used to set configurations after the railtie has been loaded' do
-    @app.config.eager_load = true
-    @app.config.before_eager_load do
-      @app.config.global_id.app = 'foobar'
-      @app.config.global_id.expires_in = 1.year
-    end
+  test 'SignedGlobalID.verifier defaults to Blog::Application.message_verifier(:signed_global_ids) when secret_token is present' do  
+    @app.initialize!  
+    message = {id: 42}  
+    signed_message = SignedGlobalID.verifier.generate(message) 
 
-    @app.initialize!
-    assert_equal 'foobar', GlobalID.app
-    assert_equal 1.year, SignedGlobalID.expires_in
-  end
-
-  test 'config.global_id can be used to explicitly set SignedGlobalID.expires_in to nil after the railtie has been loaded' do
-    @app.config.eager_load = true
-    @app.config.before_eager_load do
-      @app.config.global_id.expires_in = nil
-    end
-
-    @app.initialize!
-    assert_nil SignedGlobalID.expires_in
+    generated_key = OpenSSL::PKCS5.pbkdf2_hmac_sha1(@app.config.secret_token, 'signed_global_ids', 1000, 64)
+    assert_equal ActiveSupport::MessageVerifier.new(generated_key).generate(message), signed_message
   end
 
   test 'SignedGlobalID.verifier defaults to nil when secret_token is not present' do
