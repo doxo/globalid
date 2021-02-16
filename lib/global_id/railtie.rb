@@ -12,7 +12,7 @@ class GlobalID
   # Set up the signed GlobalID verifier and include Active Record support.
   class Railtie < Rails::Railtie # :nodoc:
     config.global_id = ActiveSupport::OrderedOptions.new
-    Dir.glob("lib/global_id/**/*.rb").each { |file| require "./#{file}" }
+    Dir.glob("lib/global_id/**/*.rb").each { |file| require "./#{file}" unless file.include? 'railtie' }
 
     initializer 'global_id' do |app|
       default_expires_in = 1.month
